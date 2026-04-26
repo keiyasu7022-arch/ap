@@ -42,6 +42,7 @@ class App(tk.Tk):
         tk.Button(button_container, text="記録", command=self.kiroku, width=8).pack(side="left", padx=5)
         tk.Button(button_container, text="削除", command=self.delete, width=8).pack(side="left", padx=5)
         tk.Button(frame, text="単語帳へ", command=lambda: self.start_test_page(self.frame1)).grid(row=3, column=0, columnspan=4)
+        tk.Button(frame,text="一覧表示", command=self.word_list).grid(row=4, column=0, columnspan=4)
         frame.place(relx=0.5,rely=0.1,anchor="n")
 
 #テストフレーム
@@ -158,6 +159,21 @@ class App(tk.Tk):
         if self.current_word:
             self.imi_label['text'] = self.current_word[1]
             self.set_test_controls(show_next=True)
+#単語一覧表示
+    def word_list(self):
+        self.seiri()
+        try:
+            if hasattr(self, 'list_display'):
+                self.list_display.destroy()
+            with open('words.txt', 'r', encoding='utf-8') as f:
+                lines = f.readlines()
+            word_list_str = "".join(lines)
+            self.list_display = tk.Text(self.main_frame, height=10, width=30, font=('Helvetica', '12'))
+            self.list_display.insert(tk.END, word_list_str)
+            self.list_display.config(state=tk.DISABLED)
+            self.list_display.place(relx=0.5, rely=0.7, anchor="center")
+        except Exception as e:
+            print(f"Error: {e}")
 
 if __name__ == "__main__":
     app = App()
